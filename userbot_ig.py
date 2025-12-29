@@ -2,8 +2,8 @@ import instaloader
 import time
 from instaloader.exceptions import ConnectionException
 
-USERNAME = "faroyzisptra"
-PASSWORD = "2fpds7j.9Nn.Q.9"
+USERNAME = "yournextmistake"
+PASSWORD = "ozyganteng132"
 
 # Inisialisasi dan login
 bot = instaloader.Instaloader()
