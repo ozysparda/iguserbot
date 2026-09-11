@@ -5,8 +5,6 @@ import json
 from instaloader.exceptions import ConnectionException
 
 # ============== CONFIG ==============
-USERNAME = "yournextmistake"
-PASSWORD = "ozyganteng132"
 WHITELIST_FILE = "whitelist.json"
 # ====================================
 
@@ -25,16 +23,26 @@ def save_whitelist(whitelist):
         json.dump(whitelist, f)
 
 def login():
+    print("\n" + "="*40)
+    print("       LOGIN IG")
+    print("="*40)
+    username = input("Username: ").strip()
+    password = input("Password: ").strip()
+    
+    if not username or not password:
+        print("✗ Username dan password harus diisi!")
+        return False, None
+    
     try:
-        bot.login(USERNAME, PASSWORD)
+        bot.login(username, password)
         print("✓ Login berhasil!")
-        return True
+        return True, username
     except Exception as e:
         print(f"✗ Login gagal: {e}")
-        return False
+        return False, None
 
-def get_profile():
-    return instaloader.Profile.from_username(bot.context, USERNAME)
+def get_profile(username):
+    return instaloader.Profile.from_username(bot.context, username)
 
 def get_followers(profile):
     while True:
@@ -169,12 +177,12 @@ def main():
     print("="*40)
     print("       IG USERBOT")
     print("="*40)
-    print("Loading...")
     
-    if not login():
+    login_success, username = login()
+    if not login_success:
         return
     
-    profile = get_profile()
+    profile = get_profile(username)
     
     # Load whitelist
     whitelist = load_whitelist()
