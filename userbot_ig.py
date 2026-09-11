@@ -26,27 +26,24 @@ def login():
     print("\n" + "="*40)
     print("       LOGIN IG")
     print("="*40)
-    username = input("Username: ").strip()
-    password = input("Password: ").strip()
+    print("Cara mendapatkan session cookie:")
+    print("1. Login ke Instagram di browser")
+    print("2. Buka DevTools (F12)")
+    print("3. Tab Application → Cookies → https://www.instagram.com")
+    print("4. Copy nilai cookie 'sessionid'")
+    print("="*40)
     
-    if not username or not password:
-        print("✗ Username dan password harus diisi!")
+    session_id = input("\nSession ID: ").strip()
+    username = input("Username: ").strip()
+    
+    if not session_id or not username:
+        print("✗ Session ID dan username harus diisi!")
         return False, None
     
     try:
-        bot.login(username, password)
-        print("✓ Login berhasil!")
+        bot.context.set_sessionid(session_id)
+        print("✓ Login berhasil dengan session cookie!")
         return True, username
-    except instaloader.exceptions.TwoFactorAuthRequiredException:
-        print("⚠ Two-Factor Authentication terdeteksi!")
-        twofa_code = input("Masukkan kode 2FA (6 digit): ").strip()
-        try:
-            bot.context.login(username, password, two_factor_code=twofa_code)
-            print("✓ Login berhasil dengan 2FA!")
-            return True, username
-        except Exception as e:
-            print(f"✗ Login gagal: {e}")
-            return False, None
     except Exception as e:
         print(f"✗ Login gagal: {e}")
         return False, None
