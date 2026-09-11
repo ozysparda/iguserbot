@@ -27,29 +27,50 @@ def login():
     print("\n" + "="*40)
     print("       LOGIN IG")
     print("="*40)
-    print("Cara mendapatkan session cookie:")
-    print("1. Login ke Instagram di browser")
-    print("2. Buka DevTools (F12)")
-    print("3. Tab Application → Cookies → https://www.instagram.com")
-    print("4. Copy nilai cookie 'sessionid'")
+    print("Pilih metode login:")
+    print("1. Load session file (.env session)")
+    print("2. Input session ID manual")
     print("="*40)
     
-    session_id = input("\nSession ID: ").strip()
-    username = input("Username: ").strip()
+    choice = input("Pilihan: ").strip()
     
-    if not session_id or not username:
-        print("✗ Session ID dan username harus diisi!")
-        return False, None
+    if choice == "1":
+        username = input("Username: ").strip()
+        session_file = os.path.join(os.path.expanduser("~"), ".config", "instaloader", f"session-{username}")
+        if os.path.exists(session_file):
+            try:
+                bot.load_session_from_file(username, session_file)
+                print("✓ Login berhasil dari session file!")
+                return True, username
+            except Exception as e:
+                print(f"✗ Gagal load session file: {e}")
+                return False, None
+        else:
+            print(f"✗ Session file tidak ditemukan: {session_file}")
+            print("Buat dulu dengan perintah: instaloader --login {username}")
+            return False, None
     
-    try:
-        bot.context.user_agent = BROWSER_UA
-        bot.context._session.cookies.set('sessionid', session_id, domain='.instagram.com')
-        bot.context._session.cookies.set('csrftoken', 'instagram', domain='.instagram.com')
-        bot.context._session.headers.update({'User-Agent': BROWSER_UA})
-        print("✓ Login berhasil dengan session cookie!")
-        return True, username
-    except Exception as e:
-        print(f"✗ Login gagal: {e}")
+    elif choice == "2":
+        session_id = input("Session ID: ").strip()
+        username = input("Username: ").strip()
+        
+        if not session_id or not username:
+            print("✗ Session ID dan username harus diisi!")
+            return False, None
+        
+        try:
+            bot.context.user_agent = BROWSER_UA
+            bot.context._session.cookies.set('sessionid', session_id, domain='.instagram.com')
+            bot.context._session.cookies.set('csrftoken', 'instagram', domain='.instagram.com')
+            bot.context._session.headers.update({'User-Agent': BROWSER_UA})
+            print("✓ Login berhasil dengan session cookie!")
+            return True, username
+        except Exception as e:
+            print(f"✗ Login gagal: {e}")
+            return False, None
+    
+    else:
+        print("✗ Pilihan tidak valid!")
         return False, None
 
 def get_profile(username):
