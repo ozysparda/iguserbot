@@ -37,6 +37,16 @@ def login():
         bot.login(username, password)
         print("✓ Login berhasil!")
         return True, username
+    except instaloader.exceptions.TwoFactorAuthRequiredException:
+        print("⚠ Two-Factor Authentication terdeteksi!")
+        twofa_code = input("Masukkan kode 2FA (6 digit): ").strip()
+        try:
+            bot.context.login(username, password, two_factor_code=twofa_code)
+            print("✓ Login berhasil dengan 2FA!")
+            return True, username
+        except Exception as e:
+            print(f"✗ Login gagal: {e}")
+            return False, None
     except Exception as e:
         print(f"✗ Login gagal: {e}")
         return False, None
