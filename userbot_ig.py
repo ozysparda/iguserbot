@@ -41,7 +41,7 @@ def login():
         return False, None
     
     try:
-        bot.context.set_sessionid(session_id)
+        bot.context._session.cookies.set('sessionid', session_id, domain='.instagram.com')
         print("✓ Login berhasil dengan session cookie!")
         return True, username
     except Exception as e:
