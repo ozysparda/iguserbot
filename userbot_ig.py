@@ -10,6 +10,7 @@ WHITELIST_FILE = "whitelist.json"
 
 # Inisialisasi
 bot = instaloader.Instaloader()
+BROWSER_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
 
 # Load whitelist jika ada
 def load_whitelist():
@@ -41,7 +42,10 @@ def login():
         return False, None
     
     try:
+        bot.context.user_agent = BROWSER_UA
         bot.context._session.cookies.set('sessionid', session_id, domain='.instagram.com')
+        bot.context._session.cookies.set('csrftoken', 'instagram', domain='.instagram.com')
+        bot.context._session.headers.update({'User-Agent': BROWSER_UA})
         print("✓ Login berhasil dengan session cookie!")
         return True, username
     except Exception as e:
