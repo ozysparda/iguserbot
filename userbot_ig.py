@@ -53,7 +53,14 @@ def login():
         return False, None
 
 def get_profile(username):
-    return instaloader.Profile.from_username(bot.context, username)
+    import time
+    while True:
+        try:
+            return instaloader.Profile.from_username(bot.context, username)
+        except ConnectionException as e:
+            print(f"Error: {e}")
+            print("Menunggu 10 menit sebelum coba lagi...")
+            time.sleep(600)
 
 def get_followers(profile):
     while True:
@@ -192,6 +199,9 @@ def main():
     login_success, username = login()
     if not login_success:
         return
+    
+    print("\nMenunggu 30 detik sebelum fetch data (hindari rate limit)...")
+    time.sleep(30)
     
     profile = get_profile(username)
     
