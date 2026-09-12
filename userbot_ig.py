@@ -2,7 +2,11 @@ import instaloader
 import time
 import os
 import json
+import sys
 from instaloader.exceptions import ConnectionException
+
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
 
 # ============== CONFIG ==============
 WHITELIST_FILE = "whitelist.json"
